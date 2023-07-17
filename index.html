@@ -114,7 +114,7 @@
 <!--</body>-->
 <!--</html>-->
 
-demo 4
+demo 5
 
 <!DOCTYPE html>
 <html lang="en">
@@ -129,59 +129,51 @@ demo 4
     </style>
 </head>
 <body>
-<video id="videoElement" autoplay></video>
+<video id="videoElement"></video>
+<button id="playButton">Phát</button>
 <button id="captureButton">Chụp ảnh</button>
 <img id="capturedImage" alt="">
 
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script>
     var video = document.getElementById("videoElement");
+    var playButton = document.getElementById("playButton");
     var captureButton = document.getElementById("captureButton");
     var capturedImage = document.getElementById("capturedImage");
     var canvas = document.createElement("canvas");
     var canvasContext = canvas.getContext("2d");
 
-    function startVideo() {
-        // Yêu cầu truy cập vào video từ webcam
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function(stream) {
-                // Gán stream vào video element để hiển thị hình ảnh từ webcam
-                video.srcObject = stream;
-                video.play();
-            })
-            .catch(function(error) {
-                console.log("Có lỗi xảy ra: " + error);
-            });
+    // Kiểm tra xem trình duyệt đã hỗ trợ API getUserMedia chưa
+    if (navigator.mediaDevices.getUserMedia) {
+        // Xử lý sự kiện click của nút phát
+        playButton.addEventListener("click", function() {
+            // Yêu cầu truy cập vào video từ webcam
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    // Gán stream vào video element để hiển thị hình ảnh từ webcam
+                    video.srcObject = stream;
+                })
+                .catch(function(error) {
+                    alert("Có lỗi xảy ra: " + error);
+                });
+        });
+
+        // Xử lý sự kiện click của nút chụp ảnh
+        captureButton.addEventListener("click", function() {
+            // Thiết lập kích thước của canvas bằng với video element
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Vẽ hình ảnh từ video element lên canvas
+            canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Lấy dữ liệu ảnh từ canvas dưới dạng URL
+            var imageDataURL = canvas.toDataURL("image/png");
+
+            // Gán dữ liệu ảnh đã chụp vào thẻ <img> để hiển thị
+            capturedImage.src = imageDataURL;
+        });
     }
-
-    // Xử lý sự kiện tương tác người dùng
-    document.addEventListener("touchstart", function() {
-        startVideo();
-        // Loại bỏ sự kiện "touchstart" sau khi đã tương tác thành công
-        document.removeEventListener("touchstart", arguments.callee);
-    });
-
-    document.addEventListener("click", function() {
-        startVideo();
-        // Loại bỏ sự kiện "click" sau khi đã tương tác thành công
-        document.removeEventListener("click", arguments.callee);
-    });
-
-    // Xử lý sự kiện click của nút chụp ảnh
-    captureButton.addEventListener("click", function() {
-        // Thiết lập kích thước của canvas bằng với video element
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-
-        // Vẽ hình ảnh từ video element lên canvas
-        canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        // Lấy dữ liệu ảnh từ canvas dưới dạng URL
-        var imageDataURL = canvas.toDataURL("image/png");
-
-        // Gán dữ liệu ảnh đã chụp vào thẻ <img> để hiển thị
-        capturedImage.src = imageDataURL;
-    });
 </script>
 </body>
 </html>
