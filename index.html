@@ -70,7 +70,7 @@
     </style>
 </head>
 <body>
-<video width="320" height="240" id="videoElement" autoplay muted></video>
+<video width="320" height="240" id="videoElement" autoplay muted playsinline></video>
 <button id="captureButton">Chụp ảnh</button>
 <button id="showVideo">show video</button>
 <img id="capturedImage" alt="">
@@ -145,20 +145,20 @@
     //         });
     //
         // Xử lý sự kiện click của nút chụp ảnh
-        // captureButton.addEventListener("click", function() {
-        //     // Thiết lập kích thước của canvas bằng với video element
-        //     canvas.width = video.videoWidth;
-        //     canvas.height = video.videoHeight;
-        //
-        //     // Vẽ hình ảnh từ video element lên canvas
-        //     canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
-        //
-        //     // Lấy dữ liệu ảnh từ canvas dưới dạng URL
-        //     var imageDataURL = canvas.toDataURL("image/png");
-        //
-        //     // Gán dữ liệu ảnh đã chụp vào thẻ <img> để hiển thị
-        //     capturedImage.src = imageDataURL;
-        // });
+        captureButton.addEventListener("click", function() {
+            // Thiết lập kích thước của canvas bằng với video element
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Vẽ hình ảnh từ video element lên canvas
+            canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Lấy dữ liệu ảnh từ canvas dưới dạng URL
+            var imageDataURL = canvas.toDataURL("image/png");
+
+            // Gán dữ liệu ảnh đã chụp vào thẻ <img> để hiển thị
+            capturedImage.src = imageDataURL;
+        });
     // }
 </script>
 </body>
