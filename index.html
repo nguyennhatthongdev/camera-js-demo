@@ -367,6 +367,8 @@ line
 <button id="showVideo">Show video</button>
 <img id="capturedImage" alt="">
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/getusermedia/dist/getUserMedia.js"></script>
+
 <script>
     var video = document.getElementById("videoElement");
     var captureButton = document.getElementById("captureButton");
@@ -419,8 +421,24 @@ line
             handleSuccess(stream);
             e.target.disabled = true;
         } catch (e) {
-            handleError(e);
+            if (e.name === 'PermissionDeniedError' && navigator.userAgent.includes('Line') && navigator.userAgent.includes('Android')) {
+                showCustomPermissionUI();
+            } else {
+                handleError(e);
+            }
         }
+    }
+
+    function showCustomPermissionUI() {
+        const permissionUI = document.createElement('div');
+        permissionUI.innerHTML = '<p>Tap the button below to grant access to the camera.</p><button id="grantPermissionButton">Grant Permission</button>';
+        document.body.appendChild(permissionUI);
+
+        const grantPermissionButton = document.getElementById('grantPermissionButton');
+        grantPermissionButton.addEventListener('click', function() {
+            init(navigator.mediaDevices.getUserMedia(constraints));
+            document.body.removeChild(permissionUI);
+        });
     }
 
     document.querySelector('#showVideo').addEventListener('click', e => init(e));
