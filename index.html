@@ -201,6 +201,7 @@ code android 2
 <button id="captureButton">Chụp ảnh</button>
 <button id="showVideo">Show video</button>
 <img id="capturedImage" alt="">
+<canvas></canvas>
 <div id="errorMsg"></div>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script>
@@ -226,34 +227,57 @@ code android 2
     //     });
     // }
 
+    // function handleSuccess(stream) {
+    //     const video = document.querySelector('video');
+    //     const videoTracks = stream.getVideoTracks();
+    //     window.stream = stream; // make variable available to browser console
+    //     video.srcObject = stream;
+    //
+    //     const recordedChunks = [];
+    //     const mediaRecorder = new MediaRecorder(stream);
+    //
+    //     mediaRecorder.addEventListener('dataavailable', function(event) {
+    //         if (event.data.size > 0) {
+    //             recordedChunks.push(event.data);
+    //         }
+    //     });
+    //
+    //     mediaRecorder.addEventListener('stop', function() {
+    //         const recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
+    //         video.src = window.URL.createObjectURL(recordedBlob);
+    //         video.play();
+    //     });
+    //
+    //     mediaRecorder.start();
+    //
+    //     // Stop the media recorder after a certain duration (e.g., 5 seconds)
+    //     setTimeout(function() {
+    //         mediaRecorder.stop();
+    //     }, 5000);
+    // }
+
     function handleSuccess(stream) {
         const video = document.querySelector('video');
         const videoTracks = stream.getVideoTracks();
         window.stream = stream; // make variable available to browser console
         video.srcObject = stream;
 
-        const recordedChunks = [];
-        const mediaRecorder = new MediaRecorder(stream);
+        const canvas = document.querySelector('canvas');
+        const canvasContext = canvas.getContext('2d');
 
-        mediaRecorder.addEventListener('dataavailable', function(event) {
-            if (event.data.size > 0) {
-                recordedChunks.push(event.data);
-            }
-        });
+        function captureFrame() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+            requestAnimationFrame(captureFrame);
+        }
 
-        mediaRecorder.addEventListener('stop', function() {
-            const recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
-            video.src = window.URL.createObjectURL(recordedBlob);
+        video.addEventListener('loadedmetadata', function() {
             video.play();
+            captureFrame();
         });
-
-        mediaRecorder.start();
-
-        // Stop the media recorder after a certain duration (e.g., 5 seconds)
-        setTimeout(function() {
-            mediaRecorder.stop();
-        }, 5000);
     }
+
 
     function handleError(error) {
         if (error.name === 'OverconstrainedError') {
