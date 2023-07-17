@@ -215,15 +215,44 @@ code android 2
         video: { facingMode: 'environment' } // Thêm cấu hình này để chọn camera sau (back camera) trên Android
     };
 
+    // function handleSuccess(stream) {
+    //     const video = document.querySelector('video');
+    //     const videoTracks = stream.getVideoTracks();
+    //     window.stream = stream; // make variable available to browser console
+    //     video.srcObject = stream;
+    //
+    //     video.addEventListener('loadedmetadata', function() {
+    //         video.play();
+    //     });
+    // }
+
     function handleSuccess(stream) {
         const video = document.querySelector('video');
         const videoTracks = stream.getVideoTracks();
         window.stream = stream; // make variable available to browser console
         video.srcObject = stream;
 
-        video.addEventListener('loadedmetadata', function() {
+        const recordedChunks = [];
+        const mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.addEventListener('dataavailable', function(event) {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        });
+
+        mediaRecorder.addEventListener('stop', function() {
+            const recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
+            video.src = window.URL.createObjectURL(recordedBlob);
             video.play();
         });
+
+        mediaRecorder.start();
+
+        // Stop the media recorder after a certain duration (e.g., 5 seconds)
+        setTimeout(function() {
+            mediaRecorder.stop();
+        }, 5000);
     }
 
     function handleError(error) {
