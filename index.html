@@ -313,6 +313,7 @@ code android 3
     function showCustomPermissionUI() {
         errorMsg('showCustomPermissionUI')
         const grantPermissionButton = document.getElementById('grantPermissionButton');
+        errorMsg(grantPermissionButton)
         grantPermissionButton.addEventListener('click', function() {
             errorMsg('Request camera access')
             navigator.mediaDevices.getUserMedia({ video: true }) // Request camera access
