@@ -312,8 +312,9 @@ code android 3
 
     function showCustomPermissionUI() {
         errorMsg('showCustomPermissionUI')
+        init();
         const grantPermissionButton = document.getElementById('grantPermissionButton');
-        errorMsg(JSON.stringify(grantPermissionButton))
+        errorMsg(grantPermissionButton)
         grantPermissionButton.addEventListener('click', function() {
             errorMsg('Request camera access')
             navigator.mediaDevices.getUserMedia({ video: true }) // Request camera access
@@ -339,6 +340,8 @@ code android 3
 
     async function init(e) {
         try {
+            errorMsg('re init')
+            console.log(await navigator.mediaDevices.getUserMedia(constraints));
             const stream = await navigator.mediaDevices.getUserMedia(constraints);
             handleSuccess(stream);
             e.target.disabled = true;
