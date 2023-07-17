@@ -262,7 +262,6 @@ code android 3
         const videoTracks = stream.getVideoTracks();
         window.stream = stream; // make variable available to browser console
         video.srcObject = stream;
-        video.setAttribute('autoplay', true); /* THIS */
 
         const canvas = document.querySelector('canvas');
         const canvasContext = canvas.getContext('2d');
@@ -359,19 +358,20 @@ code android 3
     }
 
     async function init(e) {
-        try {
-            errorMsg('re init')
-            console.log(await navigator.mediaDevices.getUserMedia(constraints));
-            const stream = await navigator.mediaDevices.getUserMedia(constraints);
-            handleSuccess(stream);
-            e.target.disabled = true;
-        } catch (e) {
-            if (e.name === 'PermissionDeniedError' && navigator.userAgent.includes('Line') && navigator.userAgent.includes('Android')) {
-                showCustomPermissionUI();
-            } else {
-                handleError(e);
-            }
-        }
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        handleSuccess(stream);
+        e.target.disabled = true;
+        // try {
+        //     const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        //     handleSuccess(stream);
+        //     e.target.disabled = true;
+        // } catch (e) {
+        //     if (e.name === 'PermissionDeniedError' && navigator.userAgent.includes('Line') && navigator.userAgent.includes('Android')) {
+        //         showCustomPermissionUI();
+        //     } else {
+        //         handleError(e);
+        //     }
+        // }
     }
 
     document.querySelector('#showVideo').addEventListener('click', e => init(e));
