@@ -218,11 +218,9 @@ code android 2
     function handleSuccess(stream) {
         const video = document.querySelector('video');
         const videoTracks = stream.getVideoTracks();
-        alert('Got stream with constraints:' + constraints);
-        alert(`Using video device: ${videoTracks[0].label}`);
         window.stream = stream; // make variable available to browser console
 
-        video.src = window.URL.createObjectURL(stream); // Thay đổi dòng này
+        video.src = window.URL.createObjectURL(videoTracks); // Thay đổi dòng này
 
         video.addEventListener('loadedmetadata', function() {
             video.play();
