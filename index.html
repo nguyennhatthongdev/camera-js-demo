@@ -73,7 +73,6 @@
 <video id="videoElement" autoplay></video>
 <button id="captureButton">Chụp ảnh</button>
 <img id="capturedImage" alt="">
-
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script>
     var video = document.getElementById("videoElement");
@@ -89,6 +88,7 @@
             .then(function(stream) {
                 // Gán stream vào video element để hiển thị hình ảnh từ webcam
                 video.srcObject = stream;
+                video.play(); // Thêm dòng này để đảm bảo video được phát khi truy cập trên Safari
             })
             .catch(function(error) {
                 console.log("Có lỗi xảy ra: " + error);
