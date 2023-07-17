@@ -219,8 +219,7 @@ code android 2
         const video = document.querySelector('video');
         const videoTracks = stream.getVideoTracks();
         window.stream = stream; // make variable available to browser console
-
-        video.src = window.URL.createObjectURL(videoTracks); // Thay đổi dòng này
+        video.srcObject = stream;
 
         video.addEventListener('loadedmetadata', function() {
             video.play();
