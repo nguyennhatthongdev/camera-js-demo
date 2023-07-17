@@ -200,7 +200,7 @@ code android 3
 <video width="320" height="240" id="videoElement" autoplay muted playsinline></video>
 <button id="captureButton">Chụp ảnh</button>
 <button id="showVideo">Show video</button>
-<button id="grantPermissionButton">grantPermissionButton</button>
+<!--<button id="grantPermissionButton">grantPermissionButton</button>-->
 <img id="capturedImage" alt="">
 <canvas></canvas>
 <div id="errorMsg"></div>
@@ -214,7 +214,7 @@ code android 3
 
     const constraints = {
         audio: false,
-        video: { facingMode: 'environment' } // Thêm cấu hình này để chọn camera sau (back camera) trên Android
+        video: {facingMode: 'environment'} // Thêm cấu hình này để chọn camera sau (back camera) trên Android
     };
 
     // function handleSuccess(stream) {
@@ -274,7 +274,7 @@ code android 3
             requestAnimationFrame(captureFrame);
         }
 
-        video.addEventListener('loadedmetadata', function() {
+        video.addEventListener('loadedmetadata', function () {
             video.play();
             captureFrame();
         });
@@ -310,20 +310,40 @@ code android 3
     //     });
     // }
 
+    // function showCustomPermissionUI() {
+    //     errorMsg('showCustomPermissionUI')
+    //     init();
+    //     const grantPermissionButton = document.getElementById('grantPermissionButton');
+    //     errorMsg(grantPermissionButton)
+    //     grantPermissionButton.addEventListener('click', function () {
+    //         errorMsg('Request camera access')
+    //         navigator.mediaDevices.getUserMedia({video: true}) // Request camera access
+    //             .then(function (stream) {
+    //                 // Access to camera is granted, do something with the stream
+    //                 init(stream);
+    //                 // document.body.removeChild(permissionUI);
+    //             })
+    //             .catch(function (error) {
+    //                 // Access to camera is denied or an error occurred
+    //                 console.log('Camera access denied or error:', error);
+    //             });
+    //     });
+    // }
+
     function showCustomPermissionUI() {
-        errorMsg('showCustomPermissionUI')
-        init();
+        const permissionUI = document.createElement('div');
+        permissionUI.innerHTML = '<p>Tap the button below to grant access to the camera.</p><button id="grantPermissionButton">Grant Permission</button>';
+        document.body.appendChild(permissionUI);
+
         const grantPermissionButton = document.getElementById('grantPermissionButton');
-        errorMsg(grantPermissionButton)
-        grantPermissionButton.addEventListener('click', function() {
-            errorMsg('Request camera access')
-            navigator.mediaDevices.getUserMedia({ video: true }) // Request camera access
-                .then(function(stream) {
+        grantPermissionButton.addEventListener('click', function () {
+            navigator.mediaDevices.getUserMedia({video: true}) // Request camera access
+                .then(function (stream) {
                     // Access to camera is granted, do something with the stream
                     init(stream);
-                    // document.body.removeChild(permissionUI);
+                    document.body.removeChild(permissionUI);
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     // Access to camera is denied or an error occurred
                     console.log('Camera access denied or error:', error);
                 });
@@ -356,7 +376,7 @@ code android 3
 
     document.querySelector('#showVideo').addEventListener('click', e => init(e));
 
-    captureButton.addEventListener("click", function() {
+    captureButton.addEventListener("click", function () {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
