@@ -358,7 +358,7 @@ code android 3
     }
 
     async function init(e) {
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const stream = await navigator.getUserMedia(constraints);
         handleSuccess(stream);
         e.target.disabled = true;
         // try {
