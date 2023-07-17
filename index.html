@@ -57,6 +57,124 @@
 <!--</body>-->
 <!--</html>-->
 
+<!-- code run được trên ios -->
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <title>Truy cập Webcam và Chụp ảnh trên Safari</title>-->
+<!--    <meta charset="utf-8">-->
+<!--    <meta name="description" content="WebRTC code samples">-->
+<!--    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">-->
+<!--    <meta itemprop="description" content="Client-side WebRTC code samples">-->
+<!--    <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">-->
+<!--    <meta itemprop="name" content="WebRTC code samples">-->
+<!--    <meta name="mobile-web-app-capable" content="yes">-->
+<!--    <meta id="theme-color" name="theme-color" content="#ffffff">-->
+
+<!--    <style>-->
+<!--        #videoElement {-->
+<!--            width: 100%;-->
+<!--            height: auto;-->
+<!--            object-fit: cover; /* Thêm thuộc tính này để hiển thị video theo tỷ lệ */-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<video width="320" height="240" id="videoElement" autoplay muted playsinline></video>-->
+<!--<button id="captureButton">Chụp ảnh</button>-->
+<!--<button id="showVideo">show video</button>-->
+<!--<img id="capturedImage" alt="">-->
+<!--<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>-->
+<!--<script>-->
+<!--    console.log('hello')-->
+<!--    var video = document.getElementById("videoElement");-->
+<!--    var captureButton = document.getElementById("captureButton");-->
+<!--    var capturedImage = document.getElementById("capturedImage");-->
+<!--    var canvas = document.createElement("canvas");-->
+<!--    var canvasContext = canvas.getContext("2d");-->
+
+<!--    // Put variables in global scope to make them available to the browser console.-->
+<!--    const constraints = window.constraints = {-->
+<!--        audio: false,-->
+<!--        video: true,-->
+<!--    };-->
+
+<!--    function handleSuccess(stream) {-->
+<!--        const video = document.querySelector('video');-->
+<!--        const videoTracks = stream.getVideoTracks();-->
+<!--        console.log('Got stream with constraints:', constraints);-->
+<!--        console.log(`Using video device: ${videoTracks[0].label}`);-->
+<!--        window.stream = stream; // make variable available to browser console-->
+<!--        video.srcObject = stream;-->
+<!--    }-->
+
+<!--    function handleError(error) {-->
+<!--        if (error.name === 'OverconstrainedError') {-->
+<!--            const v = constraints.video;-->
+<!--            errorMsg(`The resolution ${v.width.exact}x${v.height.exact} px is not supported by your device.`);-->
+<!--        } else if (error.name === 'NotAllowedError') {-->
+<!--            errorMsg('Permissions have not been granted to use your camera and ' +-->
+<!--                'microphone, you need to allow the page access to your devices in ' +-->
+<!--                'order for the demo to work.');-->
+<!--        }-->
+<!--        errorMsg(`getUserMedia error: ${error.name}`, error);-->
+<!--    }-->
+
+<!--    function errorMsg(msg, error) {-->
+<!--        const errorElement = document.querySelector('#errorMsg');-->
+<!--        errorElement.innerHTML += `<p>${msg}</p>`;-->
+<!--        if (typeof error !== 'undefined') {-->
+<!--            console.error(error);-->
+<!--        }-->
+<!--    }-->
+
+<!--    async function init(e) {-->
+<!--        try {-->
+<!--            const stream = await navigator.mediaDevices.getUserMedia(constraints);-->
+<!--            handleSuccess(stream);-->
+<!--            e.target.disabled = true;-->
+<!--        } catch (e) {-->
+<!--            handleError(e);-->
+<!--        }-->
+<!--    }-->
+
+<!--    document.querySelector('#showVideo').addEventListener('click', e => init(e));-->
+
+
+<!--    // // Kiểm tra xem trình duyệt đã hỗ trợ API getUserMedia chưa-->
+<!--    // if (navigator.mediaDevices.getUserMedia) {-->
+<!--    //     // Yêu cầu truy cập vào video từ webcam-->
+<!--    //     navigator.mediaDevices.getUserMedia({ video: true })-->
+<!--    //         .then(function(stream) {-->
+<!--    //             // Gán stream vào video element để hiển thị hình ảnh từ webcam-->
+<!--    //             video.src = stream;-->
+<!--    //             video.play(); // Thêm dòng này để đảm bảo video được phát khi truy cập trên Safari-->
+<!--    //         })-->
+<!--    //         .catch(function(error) {-->
+<!--    //             console.log("Có lỗi xảy ra: " + error);-->
+<!--    //         });-->
+<!--    //-->
+<!--        // Xử lý sự kiện click của nút chụp ảnh-->
+<!--        captureButton.addEventListener("click", function() {-->
+<!--            // Thiết lập kích thước của canvas bằng với video element-->
+<!--            canvas.width = video.videoWidth;-->
+<!--            canvas.height = video.videoHeight;-->
+
+<!--            // Vẽ hình ảnh từ video element lên canvas-->
+<!--            canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);-->
+
+<!--            // Lấy dữ liệu ảnh từ canvas dưới dạng URL-->
+<!--            var imageDataURL = canvas.toDataURL("image/png");-->
+
+<!--            // Gán dữ liệu ảnh đã chụp vào thẻ <img> để hiển thị-->
+<!--            capturedImage.src = imageDataURL;-->
+<!--        });-->
+<!--    // }-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+code android
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,21 +199,19 @@
 <body>
 <video width="320" height="240" id="videoElement" autoplay muted playsinline></video>
 <button id="captureButton">Chụp ảnh</button>
-<button id="showVideo">show video</button>
+<button id="showVideo">Show video</button>
 <img id="capturedImage" alt="">
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script>
-    console.log('hello')
     var video = document.getElementById("videoElement");
     var captureButton = document.getElementById("captureButton");
     var capturedImage = document.getElementById("capturedImage");
     var canvas = document.createElement("canvas");
     var canvasContext = canvas.getContext("2d");
 
-    // Put variables in global scope to make them available to the browser console.
-    const constraints = window.constraints = {
+    const constraints = {
         audio: false,
-        video: true
+        video: { facingMode: 'environment' } // Thêm cấu hình này để chọn camera sau (back camera) trên Android
     };
 
     function handleSuccess(stream) {
@@ -139,36 +255,13 @@
 
     document.querySelector('#showVideo').addEventListener('click', e => init(e));
 
-
-    // // Kiểm tra xem trình duyệt đã hỗ trợ API getUserMedia chưa
-    // if (navigator.mediaDevices.getUserMedia) {
-    //     // Yêu cầu truy cập vào video từ webcam
-    //     navigator.mediaDevices.getUserMedia({ video: true })
-    //         .then(function(stream) {
-    //             // Gán stream vào video element để hiển thị hình ảnh từ webcam
-    //             video.src = stream;
-    //             video.play(); // Thêm dòng này để đảm bảo video được phát khi truy cập trên Safari
-    //         })
-    //         .catch(function(error) {
-    //             console.log("Có lỗi xảy ra: " + error);
-    //         });
-    //
-        // Xử lý sự kiện click của nút chụp ảnh
-        captureButton.addEventListener("click", function() {
-            // Thiết lập kích thước của canvas bằng với video element
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-
-            // Vẽ hình ảnh từ video element lên canvas
-            canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            // Lấy dữ liệu ảnh từ canvas dưới dạng URL
-            var imageDataURL = canvas.toDataURL("image/png");
-
-            // Gán dữ liệu ảnh đã chụp vào thẻ <img> để hiển thị
-            capturedImage.src = imageDataURL;
-        });
-    // }
+    captureButton.addEventListener("click", function() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+        var imageDataURL = canvas.toDataURL("image/png");
+        capturedImage.src = imageDataURL;
+    });
 </script>
 </body>
 </html>
